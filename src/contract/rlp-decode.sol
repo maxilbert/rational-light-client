@@ -1,4 +1,5 @@
 /*
+* The original author of the library is Hamdi Allam
 * @author Hamdi Allam hamdi.allam97@gmail.com
 * Please reach out with any questions or concerns
 */
