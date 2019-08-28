@@ -1,5 +1,5 @@
 /*
-* The original author of the library is Hamdi Allam
+* The library is by Hamdi Allam under Apache License 2.0
 * @author Hamdi Allam hamdi.allam97@gmail.com
 * Please reach out with any questions or concerns
 */
