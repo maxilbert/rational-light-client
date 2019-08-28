@@ -40,6 +40,7 @@ TrieRootAndData = Tuple[Hash32, Dict[Hash32, bytes]]
 block = w3.eth.getBlock(8290728)
 trie = HexaryTrie(db={})
 assert trie.root_hash == BLANK_ROOT_HASH
+print(w3.toHex(trie.root_hash))
 
 txs = []
 B = len(block.transactions)

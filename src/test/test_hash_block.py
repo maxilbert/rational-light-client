@@ -39,7 +39,7 @@ class _BlockHeader(rlp.Serializable):
     ]
 
 
-block = w3.eth.getBlock(8288380)
+block = w3.eth.getBlock(8290728)
 
 raw_block = _BlockHeader(
     w3.toBytes(hexstr=w3.toHex(block.parentHash)),
@@ -64,3 +64,4 @@ rlp_block = rlp.encode(raw_block)
 assert keccak(rlp_block) == block.hash
 
 print(True)
+print(w3.toHex(rlp_block))
