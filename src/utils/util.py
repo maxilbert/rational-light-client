@@ -66,3 +66,7 @@ TrieRootAndData = Tuple[Hash32, Dict[Hash32, bytes]]
 sk_lwn = 0xfe62bb0b8578e1bf32bc9265fac5e6f24b9aff1e0d115cc4a41a3a6728abf1f1
 sk_rfn_1 = 0xe3991216c1ad171842100dfa62fa711d3aa81fbcae1088d9fb3574b4eedc92d6
 sk_rfn_2 = 0x1afd61c96e70bac6b9f75f0f0fee247a2f76ee5ef86cfdb660c081ba84c5e96e
+
+addr_lwn = 0x802Fd9c8369AF656196547d3619aEF222bE56777
+addr_rfn_1 = 0x3ca68896d4111E26847100C5328fF4F3F3b31B84
+addr_rfn_2 = 0xd5F4538211bf0F6cCb3c7a7934768E7E2B5703f2

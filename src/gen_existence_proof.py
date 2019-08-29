@@ -1,12 +1,12 @@
 from utils.util import *
 
 
-def gen_existence_proof(tx_hash):
+def gen_existence_proof(tx_hash, sk=sk_rfn_1):
+    # print(w3.toHex(tx_hash))
     tx = w3.eth.getTransaction(tx_hash)
     block_number = tx.blockNumber
     block = w3.eth.getBlock(block_number)
-    # print(block_number)
-    print(tx_hash)
+    print(block_number)
 
     # Genenate rlp Block header
     block_raw = BlockHeader(
@@ -35,17 +35,30 @@ def gen_existence_proof(tx_hash):
     txs = []
     for key in range(len(block.transactions)):
         tx = w3.eth.getTransaction(block.transactions[key])
-        raw_tx = Transaction(
-            tx.nonce,
-            tx.gasPrice,
-            tx.gas,
-            w3.toBytes(hexstr=tx.to),
-            tx.value,
-            w3.toBytes(hexstr=w3.toHex(hexstr=tx.input)),
-            tx.v,
-            w3.toInt(tx.r),
-            w3.toInt(tx.s)
-        )
+        try:
+            raw_tx = Transaction(
+                tx.nonce,
+                tx.gasPrice,
+                tx.gas,
+                w3.toBytes(hexstr=w3.toHex(hexstr=tx.to)),
+                tx.value,
+                w3.toBytes(hexstr=w3.toHex(hexstr=tx.input)),
+                tx.v,
+                w3.toInt(tx.r),
+                w3.toInt(tx.s)
+            )
+        except TypeError:
+            raw_tx = Transaction(
+                tx.nonce,
+                tx.gasPrice,
+                tx.gas,
+                b'',
+                tx.value,
+                w3.toBytes(hexstr=w3.toHex(hexstr=tx.input)),
+                tx.v,
+                w3.toInt(tx.r),
+                w3.toInt(tx.s)
+            )
         rlp_tx = rlp.encode(raw_tx)
         assert tx.hash == keccak(rlp_tx)
         if int.from_bytes(tx.hash, "big") == tx_hash:
@@ -77,10 +90,10 @@ def gen_existence_proof(tx_hash):
             (block_rlp, w3.toBytes(tx_hash), trie_proof_rlp, trie_keys)
         )
     )
-    sig = w3.eth.account.signHash(digest, private_key=sk_rfn_1)
+    sig = w3.eth.account.signHash(digest, private_key=sk)
     addr_1 = w3.eth.account.recoverHash(digest, signature=sig.signature)
     addr_2 = w3.eth.account.recoverHash(digest, vrs=(sig.v, sig.r, sig.s))
-    addr_3 = w3.eth.account.from_key(sk_rfn_1)
+    addr_3 = w3.eth.account.from_key(sk)
     assert(addr_1 == addr_3.address)
     assert(addr_2 == addr_3.address)
 
@@ -101,3 +114,16 @@ if __name__ == "__main__":
         trie_keys, '\n',
         v, w3.toHex(r), w3.toHex(s)
     )
+
+    proof_abi = encode_abi(
+        ['bytes', 'bytes32', 'bytes[]', 'uint[]'],
+        (block_header, tx_hash, trie_proof, trie_keys)
+    )
+
+    sig_abi = encode_abi(
+        ['uint8', 'bytes32', 'bytes32'],
+        (v, r, s)
+    )
+
+    print(w3.toHex(proof_abi))
+    print(w3.toHex(sig_abi))
